@@ -1,6 +1,6 @@
 # Django settings for braindump_site project.
 
-root_directory = '/Users/ben/git/braindump_site'
+root_directory = '/Volumes/white/git/braindump_site'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -72,7 +72,8 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
+    'braindump_site.IgnoreCsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
@@ -93,5 +94,30 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'south',
     'braindump',
+    'djcelery',
 )
+
+import djcelery
+djcelery.setup_loader()
+
+
+BROKER_HOST = "myhost"
+BROKER_PORT = 5672
+BROKER_USER = "ben"
+BROKER_PASSWORD = "1234"
+BROKER_VHOST = "myvhost"
+CELERY_CONCURRENCY = 5
+
+from celery.schedules import crontab
+
+CELERYBEAT_SCHEDULE = {
+    # Executes every Monday morning at 7:30 A.M
+    "add": {
+        "task": "braindump.tasks.add",
+        "schedule": crontab(),
+        "args": (16, 16),
+    },
+}
+
