@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     (r'^static/(?P<path>.*)$', 'django.views.static.serve',
             {'document_root': root_directory + '/braindump/static'}),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    (r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
     (r'^admin/', include(admin.site.urls)),
     (r'^braindump/', include('braindump.urls')),
 )
